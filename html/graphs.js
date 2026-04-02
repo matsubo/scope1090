@@ -267,12 +267,14 @@ function initKeyboard() {
 
         switch (e.key) {
             case 'ArrowLeft': {
+                e.preventDefault();
                 const idx  = TIME_FRAMES.indexOf(timeFrame);
                 const prev = (idx - 1 + TIME_FRAMES.length) % TIME_FRAMES.length;
                 switchView(TIME_FRAMES[prev]);
                 break;
             }
             case 'ArrowRight': {
+                e.preventDefault();
                 const idx  = TIME_FRAMES.indexOf(timeFrame);
                 const next = (idx + 1) % TIME_FRAMES.length;
                 switchView(TIME_FRAMES[next]);

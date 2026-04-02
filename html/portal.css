@@ -136,6 +136,11 @@ h1 {
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--text-muted);
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .panel-body {
@@ -375,14 +380,6 @@ kbd {
 }
 
 /* Collapsible panels */
-.panel-heading {
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .panel-heading::after {
     content: '▾';
     font-size: 0.85rem;
