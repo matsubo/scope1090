@@ -65,6 +65,8 @@ if (usp.get('timeframe')) {
 
 //*** DO NOT EDIT BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING ***//
 
+const TIME_FRAMES = ['2h','8h','24h','48h','7d','14d','30d','90d','180d','365d','730d','1095d','1825d','3650d'];
+
 function setGraph(id, src) {
     const img = document.getElementById(id + '-image');
     const link = document.getElementById(id + '-link');
@@ -257,15 +259,52 @@ document.addEventListener('click', function(e) {
     openModal(img);
 });
 
-// Minimal Escape key handler (full keyboard shortcuts added in initKeyboard)
-document.addEventListener('keydown', function(e) {
-    if (e.key !== 'Escape') return;
-    if (document.getElementById('modal').style.display !== 'none') {
-        closeModal();
-    } else if (document.getElementById('shortcuts-help').style.display !== 'none') {
-        toggleShortcutsHelp();
-    }
-});
+function initKeyboard() {
+    document.addEventListener('keydown', function(e) {
+        // Don't fire shortcuts when typing in form fields
+        if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
+        if (e.ctrlKey || e.metaKey) return;
+
+        switch (e.key) {
+            case 'ArrowLeft': {
+                const idx  = TIME_FRAMES.indexOf(timeFrame);
+                const prev = (idx - 1 + TIME_FRAMES.length) % TIME_FRAMES.length;
+                switchView(TIME_FRAMES[prev]);
+                break;
+            }
+            case 'ArrowRight': {
+                const idx  = TIME_FRAMES.indexOf(timeFrame);
+                const next = (idx + 1) % TIME_FRAMES.length;
+                switchView(TIME_FRAMES[next]);
+                break;
+            }
+            case 'f':
+            case 'F': {
+                const modal = document.getElementById('modal');
+                if (modal.style.display !== 'none') { closeModal(); break; }
+                const firstImg = document.querySelector('.img-responsive:not(.skeleton)');
+                if (firstImg) openModal(firstImg);
+                break;
+            }
+            case 'c':
+            case 'C':
+                toggleCrosshair();
+                break;
+            case '?':
+                toggleShortcutsHelp();
+                break;
+            case 'Escape':
+                if (document.getElementById('modal').style.display !== 'none') {
+                    closeModal();
+                } else if (document.getElementById('shortcuts-help').style.display !== 'none') {
+                    toggleShortcutsHelp();
+                }
+                break;
+        }
+    });
+}
+
+initKeyboard();
 
 function initPanels() {
     const saved = JSON.parse(localStorage.getItem('panels') || '{}');
