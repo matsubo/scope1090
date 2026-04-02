@@ -262,3 +262,31 @@ document.addEventListener('keydown', function(e) {
         toggleShortcutsHelp();
     }
 });
+
+function initPanels() {
+    const saved = JSON.parse(localStorage.getItem('panels') || '{}');
+    document.querySelectorAll('.panel').forEach(panel => {
+        const id = panel.id;
+        if (!id) return;
+        const heading = panel.querySelector('.panel-heading');
+        const body    = panel.querySelector('.panel-body');
+        if (!heading || !body) return;
+
+        // Restore saved state (default: expanded)
+        if (saved[id] === false) {
+            body.style.display = 'none';
+            heading.classList.add('collapsed');
+        }
+
+        heading.addEventListener('click', () => {
+            const isNowCollapsed = body.style.display !== 'none';
+            body.style.display = isNowCollapsed ? 'none' : '';
+            heading.classList.toggle('collapsed', isNowCollapsed);
+            const state = JSON.parse(localStorage.getItem('panels') || '{}');
+            state[id] = !isNowCollapsed;
+            localStorage.setItem('panels', JSON.stringify(state));
+        });
+    });
+}
+
+initPanels();
