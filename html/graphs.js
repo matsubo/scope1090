@@ -217,3 +217,48 @@ function toggleCrosshair() {
         document.removeEventListener('mousemove', crosshairListener);
     }
 }
+
+function openModal(img) {
+    const modal    = document.getElementById('modal');
+    const modalImg = document.getElementById('modal-img');
+    modal.querySelector('.modal-title').textContent = img.alt || '';
+    modalImg.src = img.src;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+function handleModalClick(e) {
+    if (e.target === document.getElementById('modal')) closeModal();
+}
+
+function toggleShortcutsHelp() {
+    const el = document.getElementById('shortcuts-help');
+    el.style.display = el.style.display === 'none' ? 'flex' : 'none';
+}
+
+function handleShortcutsClick(e) {
+    if (e.target === document.getElementById('shortcuts-help')) toggleShortcutsHelp();
+}
+
+// Open modal on graph image click (event delegation)
+document.addEventListener('click', function(e) {
+    const img = e.target.closest('.img-responsive');
+    if (!img || !img.src || img.classList.contains('skeleton')) return;
+    e.preventDefault();
+    openModal(img);
+});
+
+// Minimal Escape key handler (full keyboard shortcuts added in initKeyboard)
+document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    if (document.getElementById('modal').style.display !== 'none') {
+        closeModal();
+    } else if (document.getElementById('shortcuts-help').style.display !== 'none') {
+        toggleShortcutsHelp();
+    }
+});

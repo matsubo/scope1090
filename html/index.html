@@ -243,6 +243,34 @@
 			<div class="hl"></div>
 		</div>
 
+	<div id="modal" style="display:none" onclick="handleModalClick(event)">
+		<div class="modal-inner">
+			<div class="modal-header">
+				<span class="modal-title"></span>
+				<button class="modal-close" onclick="closeModal()">✕</button>
+			</div>
+			<div class="modal-img-wrap">
+				<img id="modal-img" src="" alt="">
+			</div>
+		</div>
+	</div>
+
+	<div id="shortcuts-help" style="display:none" onclick="handleShortcutsClick(event)">
+		<div class="shortcuts-inner">
+			<div class="shortcuts-header">
+				<span>Keyboard Shortcuts</span>
+				<button onclick="toggleShortcutsHelp()">✕</button>
+			</div>
+			<table class="shortcuts-table">
+				<tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Previous / next timeframe</td></tr>
+				<tr><td><kbd>f</kbd></td><td>Open first graph fullscreen</td></tr>
+				<tr><td><kbd>c</kbd></td><td>Toggle crosshair</td></tr>
+				<tr><td><kbd>?</kbd></td><td>Show / hide this help</td></tr>
+				<tr><td><kbd>Esc</kbd></td><td>Close modal or help</td></tr>
+			</table>
+		</div>
+	</div>
+
 		<script src="graphs.js"></script>
 
 	</body>
