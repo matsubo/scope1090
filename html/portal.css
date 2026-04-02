@@ -198,3 +198,21 @@ h1 {
     height: 1px;
     background: rgba(220, 50, 50, 0.65);
 }
+
+/* Loading skeleton */
+@keyframes skeleton-pulse {
+    0%, 100% { opacity: 0.35; }
+    50%       { opacity: 0.7; }
+}
+
+.skeleton {
+    background: var(--border);
+    animation: skeleton-pulse 1.4s ease-in-out infinite;
+    min-height: 60px;
+    border-radius: 3px;
+}
+
+.skeleton.error {
+    animation: none;
+    opacity: 0.25;
+}

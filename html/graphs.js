@@ -72,9 +72,19 @@ function setGraph(id, src) {
     if (link) link.href = src;
 }
 
+function applySkeletons() {
+    document.querySelectorAll('.img-responsive').forEach(img => {
+        img.classList.add('skeleton');
+        img.classList.remove('error');
+        img.onload  = () => img.classList.remove('skeleton');
+        img.onerror = () => img.classList.add('error');
+    });
+}
+
 function switchView(newTimeFrame) {
     clearTimeout(refreshTimer);
     refreshTimer = setTimeout(switchView, refreshInterval);
+    applySkeletons();
 
     if (newTimeFrame) {
         timeFrame = newTimeFrame;
