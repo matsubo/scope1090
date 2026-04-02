@@ -59,8 +59,31 @@ h1 {
     z-index: 100;
     background: var(--bg);
     padding: 5px 0;
-    text-align: center;
     border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+
+/* Refresh countdown bar */
+.refresh-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    padding-bottom: 2px;
+}
+
+.btn-refresh {
+    font-size: 0.9rem;
+    padding: 1px 6px;
+    line-height: 1.4;
+}
+
+#refresh-countdown {
+    min-width: 90px;
 }
 
 /* Button group */

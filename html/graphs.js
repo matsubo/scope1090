@@ -83,8 +83,9 @@ function applySkeletons() {
 
 function switchView(newTimeFrame) {
     clearTimeout(refreshTimer);
-    refreshTimer = setTimeout(switchView, refreshInterval);
+    clearInterval(countdownInterval);
     applySkeletons();
+    refreshTimer = setTimeout(switchView, refreshInterval);
 
     if (newTimeFrame) {
         timeFrame = newTimeFrame;
@@ -153,10 +154,13 @@ function switchView(newTimeFrame) {
 
     const pathName = window.location.pathname.replace(/\/+/, '/') || '/';
     window.history.replaceState(null, '', window.location.origin + pathName + '?timeframe=' + timeFrame);
+
+    startCountdown(refreshInterval);
 }
 
 let verbose = true;
 let refreshTimer = null;
+let countdownInterval = null;
 let timersActive = false;
 
 function handleVisibilityChange() {
@@ -290,3 +294,20 @@ function initPanels() {
 }
 
 initPanels();
+
+function startCountdown(ms) {
+    clearInterval(countdownInterval);
+    const el = document.getElementById('refresh-countdown');
+    if (!el) return;
+    let remaining = Math.round(ms / 1000);
+    el.textContent = `next in ${remaining}s`;
+    countdownInterval = setInterval(() => {
+        remaining -= 1;
+        if (remaining <= 0) {
+            el.textContent = 'refreshing\u2026';
+            clearInterval(countdownInterval);
+        } else {
+            el.textContent = `next in ${remaining}s`;
+        }
+    }, 1000);
+}
