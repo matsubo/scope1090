@@ -38,33 +38,6 @@ def _great_circle_km(lat1, lon1, lat2, lon2):
     return r * 2 * math.asin(math.sqrt(a))
 
 
-def _cpu_temp():
-    try:
-        with open('/sys/class/thermal/thermal_zone0/temp') as f:
-            return float(f.read().strip()) / 1000.0
-    except OSError:
-        return None
-
-
-def _mem_used_pct():
-    try:
-        data = {}
-        with open('/proc/meminfo') as f:
-            for line in f:
-                parts = line.split()
-                if len(parts) >= 2:
-                    data[parts[0].rstrip(':')] = int(parts[1])
-        total = data.get('MemTotal', 0)
-        if total == 0:
-            return None
-        free = data.get('MemFree', 0)
-        buffers = data.get('Buffers', 0)
-        cached = data.get('Cached', 0) + data.get('SReclaimable', 0) - data.get('Shmem', 0)
-        used = total - free - buffers - cached
-        return round(100.0 * used / total, 1)
-    except OSError:
-        return None
-
 
 def parse_metrics(stats, aircraft_data=None, receiver=None):
     """Extract ADS-B and system metrics. Returns {name: float}."""
@@ -144,14 +117,6 @@ def parse_metrics(stats, aircraft_data=None, receiver=None):
                 result['range_q1']     = _percentile(ranges, 0.25)
                 result['range_median'] = _percentile(ranges, 0.50)
                 result['range_q3']     = _percentile(ranges, 0.75)
-
-    # System metrics
-    temp = _cpu_temp()
-    if temp is not None:
-        result['cpu_temp'] = temp
-    mem = _mem_used_pct()
-    if mem is not None:
-        result['mem_used_pct'] = mem
 
     return result
 
