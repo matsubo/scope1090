@@ -16,8 +16,8 @@ Replaces the RRD/PNG pipeline of graphs1090 with a SQLite time-series store and 
 
 - Raspberry Pi running Raspberry Pi OS (or any Linux with systemd)
 - [readsb](https://github.com/wiedehopf/readsb) or dump1090 producing `stats.json`
-- Python 3.9+, `pip3 install flask`
-- Node.js 18+ (build-time only, not needed at runtime)
+- Python 3.9+
+- Node.js 18+ (needed to build the frontend during install)
 - nginx or lighttpd
 
 ## Quick Install
@@ -27,6 +27,12 @@ git clone https://github.com/matsubo/scope1090
 cd scope1090
 sudo bash scope1090/install.sh
 ```
+
+The install script:
+1. Builds the frontend (`npm install && npm run build` inside `scope1090/html/`)
+2. Installs Python files to `/usr/share/scope1090/`
+3. Installs Flask via `pip3`
+4. Installs systemd units and configures nginx or lighttpd
 
 Then open `http://<raspberry-pi-ip>/` in your browser.
 

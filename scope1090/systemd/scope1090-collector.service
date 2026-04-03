@@ -9,7 +9,7 @@ Restart=always
 RestartSec=10
 Nice=10
 ExecStart=/usr/bin/python3 -m scope1090.collector
-WorkingDirectory=/usr/share/scope1090
+WorkingDirectory=/usr/share
 Environment=SCOPE1090_DB=/run/scope1090/live.db
 Environment=READSB_STATS_URL=file:///run/readsb/stats.json
 

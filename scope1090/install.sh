@@ -13,11 +13,15 @@ if [ ! -d scope1090/html/dist ]; then
     cd scope1090/html && npm install && npm run build && cd ../..
 fi
 
-# Install Python package
+# Install Python package (package lives at /usr/share/scope1090/)
 echo "==> Installing Python files..."
-mkdir -p /usr/share
+rm -rf /usr/share/scope1090
 cp -r scope1090 /usr/share/
-cp -r scope1090/html/dist "$INSTALL_DIR/html"
+
+# Install built frontend (nginx/lighttpd root = $INSTALL_DIR/html)
+rm -rf "$INSTALL_DIR/html"
+mkdir -p "$INSTALL_DIR/html"
+cp -r scope1090/html/dist/. "$INSTALL_DIR/html/"
 pip3 install --quiet flask
 
 # Create data directory
