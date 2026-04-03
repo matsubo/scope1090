@@ -3,7 +3,7 @@ import time
 
 from flask import Flask, jsonify, request
 
-from scope1090.db import query_metrics, get_metric_names
+from scope1090.db import query_metrics, get_metric_names, get_conn
 
 LIVE_DB = os.environ.get('SCOPE1090_DB', '/run/scope1090/live.db')
 
@@ -41,10 +41,18 @@ def metric_names():
 @app.route('/api/status')
 def status():
     db_size = os.path.getsize(LIVE_DB) if os.path.exists(LIVE_DB) else 0
+    last_collected = None
+    if os.path.exists(LIVE_DB):
+        conn = get_conn(LIVE_DB)
+        try:
+            row = conn.execute('SELECT MAX(ts) FROM metrics').fetchone()
+            last_collected = row[0]
+        finally:
+            conn.close()
     return jsonify({
         'uptime_sec': int(time.time() - _start_time),
         'db_size_bytes': db_size,
-        'db_path': LIVE_DB,
+        'last_collected': last_collected,
     })
 
 

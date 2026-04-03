@@ -85,4 +85,5 @@ def test_status(client):
     body = json.loads(resp.data)
     assert 'uptime_sec' in body
     assert 'db_size_bytes' in body
+    assert 'last_collected' in body
     assert isinstance(body['uptime_sec'], (int, float))
