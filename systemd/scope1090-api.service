@@ -10,6 +10,8 @@ RestartSec=5
 ExecStart=/usr/share/scope1090/venv/bin/python3 -m scope1090.api
 WorkingDirectory=/usr/share
 Environment=SCOPE1090_DB=/run/scope1090/live.db
+Environment=SCOPE1090_URL_PREFIX=/scope1090
+Environment=SCOPE1090_PORT=5000
 
 [Install]
 WantedBy=multi-user.target

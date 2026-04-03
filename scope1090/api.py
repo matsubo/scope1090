@@ -1,17 +1,21 @@
 import os
 import time
 
-from flask import Flask, jsonify, request
+from flask import Flask, Blueprint, jsonify, request
 
 from scope1090.db import query_metrics, get_metric_names, get_conn
 
 LIVE_DB = os.environ.get('SCOPE1090_DB', '/run/scope1090/live.db')
+URL_PREFIX = os.environ.get('SCOPE1090_URL_PREFIX', '')
+PORT = int(os.environ.get('SCOPE1090_PORT', '5000'))
 
 app = Flask(__name__)
 _start_time = time.time()
 
+bp = Blueprint('api', __name__)
 
-@app.route('/api/metrics')
+
+@bp.route('/api/metrics')
 def metrics():
     metric = request.args.get('metric')
     if not metric:
@@ -23,7 +27,10 @@ def metrics():
         to_ts = int(request.args.get('to', now))
     except ValueError:
         return jsonify({'error': 'from and to must be integers'}), 400
+
     resolution = request.args.get('resolution', 'auto')
+    if resolution not in ('auto', 'raw', '1h'):
+        return jsonify({'error': 'resolution must be auto, raw, or 1h'}), 400
 
     rows, res = query_metrics(LIVE_DB, metric, from_ts, to_ts, resolution)
 
@@ -36,12 +43,12 @@ def metrics():
     })
 
 
-@app.route('/api/metrics/names')
+@bp.route('/api/metrics/names')
 def metric_names():
     return jsonify({'names': get_metric_names(LIVE_DB)})
 
 
-@app.route('/api/status')
+@bp.route('/api/status')
 def status():
     db_size = os.path.getsize(LIVE_DB) if os.path.exists(LIVE_DB) else 0
     last_collected = None
@@ -59,5 +66,8 @@ def status():
     })
 
 
+app.register_blueprint(bp, url_prefix=URL_PREFIX)
+
+
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000)
+    app.run(host='127.0.0.1', port=PORT)
