@@ -55,9 +55,9 @@ systemctl enable scope1090-restore.service \
                  scope1090-collector.service \
                  scope1090-api.service \
                  scope1090-persist.timer
-systemctl start  scope1090-collector.service \
-                 scope1090-api.service \
-                 scope1090-persist.timer
+systemctl restart scope1090-collector.service \
+                  scope1090-api.service
+systemctl start   scope1090-persist.timer 2>/dev/null || true
 
 echo ""
 echo "scope1090 installed. Visit http://$(hostname -I | awk '{print $1}')/scope1090/"
