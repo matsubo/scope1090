@@ -10,10 +10,18 @@ SYSTEMD_DIR=/etc/systemd/system
 
 echo "==> Installing scope1090"
 
-# Always rebuild frontend (ensures base path and config changes are applied)
-echo "==> Building frontend..."
-rm -rf "$SCRIPT_DIR/html/dist"
-cd "$SCRIPT_DIR/html" && npm install && npm run build
+# Build frontend (skip with --skip-build for faster reinstalls when only Python changed)
+if [[ "${1:-}" != "--skip-build" ]]; then
+    echo "==> Building frontend..."
+    rm -rf "$SCRIPT_DIR/html/dist"
+    cd "$SCRIPT_DIR/html" && npm install && npm run build
+else
+    echo "==> Skipping frontend build (--skip-build)"
+    if [ ! -d "$SCRIPT_DIR/html/dist" ]; then
+        echo "ERROR: html/dist missing — run without --skip-build first" >&2
+        exit 1
+    fi
+fi
 
 # Stop services before replacing files (venv Python cannot be deleted while in use)
 echo "==> Stopping services..."
