@@ -7,7 +7,7 @@ Wants=scope1090-restore.service
 Type=simple
 Restart=always
 RestartSec=5
-ExecStart=/usr/bin/python3 -m scope1090.api
+ExecStart=/usr/share/scope1090/venv/bin/python3 -m scope1090.api
 WorkingDirectory=/usr/share
 Environment=SCOPE1090_DB=/run/scope1090/live.db
 
