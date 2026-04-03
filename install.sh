@@ -61,4 +61,8 @@ systemctl start  scope1090-collector.service \
                  scope1090-persist.timer
 
 echo ""
-echo "scope1090 installed. Visit http://$(hostname -I | awk '{print $1}')/"
+if command -v nginx >/dev/null 2>&1; then
+    echo "scope1090 installed. Visit http://$(hostname -I | awk '{print $1}')/"
+else
+    echo "scope1090 installed. Visit http://$(hostname -I | awk '{print $1}'):8090/"
+fi
