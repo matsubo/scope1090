@@ -1,6 +1,7 @@
 [Unit]
 Description=scope1090 — Flask API server
-After=scope1090-collector.service
+After=scope1090-collector.service scope1090-restore.service
+Wants=scope1090-restore.service
 
 [Service]
 Type=simple

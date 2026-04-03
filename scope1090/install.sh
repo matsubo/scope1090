@@ -15,8 +15,8 @@ fi
 
 # Install Python package
 echo "==> Installing Python files..."
-mkdir -p "$INSTALL_DIR"
-cp -r scope1090/*.py "$INSTALL_DIR/"
+mkdir -p /usr/share
+cp -r scope1090 /usr/share/
 cp -r scope1090/html/dist "$INSTALL_DIR/html"
 pip3 install --quiet flask
 

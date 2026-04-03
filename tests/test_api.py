@@ -78,6 +78,13 @@ def test_metrics_names(client):
     assert 'max_range' in body['names']
 
 
+def test_metrics_invalid_timestamp_returns_400(client):
+    c, _ = client
+    resp = c.get('/api/metrics?metric=aircraft&from=abc&to=xyz')
+    assert resp.status_code == 400
+    assert b'integers' in resp.data
+
+
 def test_status(client):
     c, _ = client
     resp = c.get('/api/status')

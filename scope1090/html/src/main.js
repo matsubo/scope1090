@@ -30,8 +30,12 @@ async function loadChart(metric, range) {
             // startValue/endValue are in ms (ECharts time axis)
             const from = Math.floor(dz.startValue / 1000);
             const to   = Math.floor(dz.endValue   / 1000);
-            const { data } = await fetchMetrics(metric, from, to);
-            chart.setOption({ series: [{ data: data.map(([ts, v]) => [ts * 1000, v]) }] });
+            try {
+                const { data } = await fetchMetrics(metric, from, to);
+                chart.setOption({ series: [{ data: data.map(([ts, v]) => [ts * 1000, v]) }] });
+            } catch (e) {
+                console.error(`[scope1090] dataZoom ${metric}: ${e.message}`);
+            }
         });
 
         window.addEventListener('resize', () => chart.resize());

@@ -18,8 +18,11 @@ def metrics():
         return jsonify({'error': 'metric parameter required'}), 400
 
     now = int(time.time())
-    from_ts = int(request.args.get('from', now - 86400))
-    to_ts = int(request.args.get('to', now))
+    try:
+        from_ts = int(request.args.get('from', now - 86400))
+        to_ts = int(request.args.get('to', now))
+    except ValueError:
+        return jsonify({'error': 'from and to must be integers'}), 400
     resolution = request.args.get('resolution', 'auto')
 
     rows, res = query_metrics(LIVE_DB, metric, from_ts, to_ts, resolution)
