@@ -1,8 +1,20 @@
 # scope1090
 
+> **⚠️ This prototype was abandoned. See below.**
+
 ADS-B receiver performance monitoring dashboard — interactive charts, full-resolution history, minimal SD card writes.
 
 Replaces the RRD/PNG pipeline of graphs1090 with a SQLite time-series store and [ECharts](https://echarts.apache.org/) interactive visualizations, designed to run on Raspberry Pi.
+
+## Why This Prototype Failed
+
+This approach was ultimately abandoned in favour of the original rrdtool/collectd pipeline for the following reasons:
+
+1. **Storage and dependency overhead** — requires both Python (Flask) and Node.js (to build the frontend) on the Raspberry Pi. Node.js alone is several hundred MB and the build step takes 30+ seconds on a Pi. The original graphs1090 needs none of this.
+
+2. **ECharts visualisation is inferior to rrdtool** — rrdtool's quartile band fills, GPRINT inline statistics (avg/min/max/current in the legend), stacked area breakdowns, and long-term data thinning are purpose-built for time-series monitoring. ECharts is a general-purpose charting library that requires significant custom code to approximate the same result, and the output is still less information-dense.
+
+3. **Backend server required** — serving data from a SQLite database requires a running Flask process at all times. rrdtool generates static PNG files that are served directly by the web server with no moving parts. The Flask process adds memory pressure on a Pi and is a single point of failure.
 
 ## Features
 
