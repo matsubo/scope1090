@@ -1,0 +1,8 @@
+[Unit]
+Description=scope1090 — persist live DB to SD card
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c '\
+    mkdir -p /var/lib/scope1090 && \
+    cp /run/scope1090/live.db /var/lib/scope1090/archive.db'

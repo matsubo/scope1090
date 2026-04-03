@@ -1,0 +1,16 @@
+[Unit]
+Description=scope1090 — restore live DB from archive on boot
+DefaultDependencies=no
+Before=scope1090-collector.service scope1090-api.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash -c '\
+    mkdir -p /run/scope1090 && \
+    if [ -f /var/lib/scope1090/archive.db ]; then \
+        cp /var/lib/scope1090/archive.db /run/scope1090/live.db; \
+    fi'
+
+[Install]
+WantedBy=multi-user.target

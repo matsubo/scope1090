@@ -1,0 +1,14 @@
+[Unit]
+Description=scope1090 — Flask API server
+After=scope1090-collector.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5
+ExecStart=/usr/bin/python3 -m scope1090.api
+WorkingDirectory=/usr/share/scope1090
+Environment=SCOPE1090_DB=/run/scope1090/live.db
+
+[Install]
+WantedBy=multi-user.target
