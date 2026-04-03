@@ -80,3 +80,8 @@ def test_run_maintenance_aggregates_old_data(tmp_db):
     assert len(rows) == 1
     assert rows[0][0] == hour_ts
     assert rows[0][1] == pytest.approx(15.0)
+
+    # Also verify the original 1-minute rows are gone (not just that aggregate exists)
+    all_rows, _ = query_metrics(tmp_db, 'aircraft', hour_ts - 1, hour_ts + 3601, 'raw')
+    raw_rows = [r for r in all_rows if r[0] != hour_ts]  # exclude the hourly aggregate
+    assert len(raw_rows) == 0, "Original 1-minute rows should be deleted after maintenance"

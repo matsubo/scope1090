@@ -43,32 +43,36 @@ def query_metrics(path, name, from_ts, to_ts, resolution='auto'):
         resolution = 'raw' if span <= 86400 else '1h'
 
     conn = get_conn(path)
-    if resolution == '1h':
-        sql = """
-            SELECT (ts / 3600) * 3600 AS bucket, AVG(value)
-            FROM metrics
-            WHERE name = ? AND ts >= ? AND ts <= ?
-            GROUP BY bucket
-            ORDER BY bucket
-        """
-    else:
-        sql = """
-            SELECT ts, value FROM metrics
-            WHERE name = ? AND ts >= ? AND ts <= ?
-            ORDER BY ts
-        """
-    rows = conn.execute(sql, (name, from_ts, to_ts)).fetchall()
-    conn.close()
+    try:
+        if resolution == '1h':
+            sql = """
+                SELECT (ts / 3600) * 3600 AS bucket, AVG(value)
+                FROM metrics
+                WHERE name = ? AND ts >= ? AND ts <= ?
+                GROUP BY bucket
+                ORDER BY bucket
+            """
+        else:
+            sql = """
+                SELECT ts, value FROM metrics
+                WHERE name = ? AND ts >= ? AND ts <= ?
+                ORDER BY ts
+            """
+        rows = conn.execute(sql, (name, from_ts, to_ts)).fetchall()
+    finally:
+        conn.close()
     return rows, resolution
 
 
 def get_metric_names(path):
     """Return sorted list of distinct metric names."""
     conn = get_conn(path)
-    rows = conn.execute(
-        "SELECT DISTINCT name FROM metrics ORDER BY name"
-    ).fetchall()
-    conn.close()
+    try:
+        rows = conn.execute(
+            "SELECT DISTINCT name FROM metrics ORDER BY name"
+        ).fetchall()
+    finally:
+        conn.close()
     return [r[0] for r in rows]
 
 
