@@ -24,13 +24,12 @@ Replaces the RRD/PNG pipeline of graphs1090 with a SQLite time-series store and 
 
 ```bash
 git clone https://github.com/matsubo/scope1090
-cd scope1090
-sudo bash scope1090/install.sh
+sudo bash scope1090/scope1090/install.sh
 ```
 
-The install script:
+The install script (can be run from any directory):
 1. Builds the frontend (`npm install && npm run build` inside `scope1090/html/`)
-2. Installs Python files to `/usr/share/scope1090/`
+2. Installs Python package to `/usr/share/scope1090/`
 3. Installs Flask via `pip3`
 4. Installs systemd units and configures nginx or lighttpd
 
