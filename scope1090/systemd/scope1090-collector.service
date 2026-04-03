@@ -1,0 +1,17 @@
+[Unit]
+Description=scope1090 — metrics collector
+After=network.target scope1090-restore.service
+Wants=scope1090-restore.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+Nice=10
+ExecStart=/usr/bin/python3 -m scope1090.collector
+WorkingDirectory=/usr/share/scope1090
+Environment=SCOPE1090_DB=/run/scope1090/live.db
+Environment=READSB_STATS_URL=file:///run/readsb/stats.json
+
+[Install]
+WantedBy=multi-user.target

@@ -4,8 +4,12 @@
 		<meta charset="utf-8">
 		<title>graphs1090</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="bootstrap.custom.light.css">
 		<link rel="stylesheet" href="portal.css">
+		<script>
+			const theme = localStorage.getItem('theme')
+				|| (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+			document.documentElement.dataset.theme = theme;
+		</script>
 		<link rel="icon" type="image/png" href="graphs-favicon.png">
 		<link rel="apple-touch-icon" href="apple-touch-icon.png">
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,7 +21,7 @@
 		<div class="container">
 			<h1>Performance Graphs</h1>
             <div class="sticky-bar">
-                <div class="btn-group sticky-bar" role="group">
+                <div class="btn-group" role="group">
                     <button type="button" id="btn-2h" class="btn btn-default btn-sm active" onclick="switchView('2h')">2 hours</button>
                     <button type="button" id="btn-8h" class="btn btn-default btn-sm" onclick="switchView('8h')">8 hours</button>
                     <button type="button" id="btn-24h" class="btn btn-default btn-sm" onclick="switchView('24h')">24 hours</button>
@@ -33,6 +37,10 @@
                     <button type="button" id="btn-1825d" class="btn btn-default btn-sm" onclick="switchView('1825d')">5 years</button>
                     <button type="button" id="btn-3650d" class="btn btn-default btn-sm" onclick="switchView('3650d')">10 years</button>
                     <button type="button" id="btn-crosshair" class="btn btn-default btn-sm" onclick="toggleCrosshair()">Crosshair</button>
+                </div>
+                <div class="refresh-bar">
+                    <button class="btn btn-refresh" onclick="switchView()" title="Refresh now">↺</button>
+                    <span id="refresh-countdown"></span>
                 </div>
             </div>
 			<div class="padding"></div>
@@ -229,6 +237,7 @@
             <p>
             <a href="https://github.com/wiedehopf/graphs1090#graphs1090">graphs1090 on github</a>
             <span id="graphs1090-version"><!-- version --></span>
+            <button id="theme-toggle" class="btn" onclick="toggleTheme()"></button>
             </p>
         </div>
 
@@ -238,12 +247,33 @@
 			<div class="hl"></div>
 		</div>
 
-		<script src="jquery-3.6.4.min.js"></script>
-		<script src="bootstrap.min.js"></script>
+	<div id="modal" style="display:none" onclick="handleModalClick(event)">
+		<div class="modal-inner">
+			<div class="modal-header">
+				<span class="modal-title"></span>
+				<button class="modal-close" onclick="closeModal()">✕</button>
+			</div>
+			<div class="modal-img-wrap">
+				<img id="modal-img" src="" alt="">
+			</div>
+		</div>
+	</div>
 
-		<script type="text/javascript">
-			$('#graphs-link').addClass("active");
-		</script>
+	<div id="shortcuts-help" style="display:none" onclick="handleShortcutsClick(event)">
+		<div class="shortcuts-inner">
+			<div class="shortcuts-header">
+				<span>Keyboard Shortcuts</span>
+				<button onclick="toggleShortcutsHelp()">✕</button>
+			</div>
+			<table class="shortcuts-table">
+				<tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Previous / next timeframe</td></tr>
+				<tr><td><kbd>f</kbd></td><td>Open first graph fullscreen</td></tr>
+				<tr><td><kbd>c</kbd></td><td>Toggle crosshair</td></tr>
+				<tr><td><kbd>?</kbd></td><td>Show / hide this help</td></tr>
+				<tr><td><kbd>Esc</kbd></td><td>Close modal or help</td></tr>
+			</table>
+		</div>
+	</div>
 
 		<script src="graphs.js"></script>
 

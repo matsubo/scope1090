@@ -1,0 +1,10 @@
+[Unit]
+Description=scope1090 — hourly DB persistence
+Requires=scope1090-persist.service
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
