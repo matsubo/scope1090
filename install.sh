@@ -10,11 +10,10 @@ SYSTEMD_DIR=/etc/systemd/system
 
 echo "==> Installing scope1090"
 
-# Build frontend if not already built
-if [ ! -d "$SCRIPT_DIR/html/dist" ]; then
-    echo "==> Building frontend..."
-    cd "$SCRIPT_DIR/html" && npm install && npm run build
-fi
+# Always rebuild frontend (ensures base path and config changes are applied)
+echo "==> Building frontend..."
+rm -rf "$SCRIPT_DIR/html/dist"
+cd "$SCRIPT_DIR/html" && npm install && npm run build
 
 # Install Python package to /usr/share/scope1090/
 echo "==> Installing Python files..."
@@ -61,8 +60,4 @@ systemctl start  scope1090-collector.service \
                  scope1090-persist.timer
 
 echo ""
-if command -v nginx >/dev/null 2>&1; then
-    echo "scope1090 installed. Visit http://$(hostname -I | awk '{print $1}')/"
-else
-    echo "scope1090 installed. Visit http://$(hostname -I | awk '{print $1}'):8090/"
-fi
+echo "scope1090 installed. Visit http://$(hostname -I | awk '{print $1}')/scope1090/"

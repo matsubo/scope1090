@@ -1,4 +1,4 @@
-const BASE = '/api';
+const BASE = import.meta.env.BASE_URL + 'api';
 
 export async function fetchMetrics(metric, from, to, resolution = 'auto') {
     const params = new URLSearchParams({ metric, from, to, resolution });
