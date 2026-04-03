@@ -27,10 +27,8 @@ cp -r "$SCRIPT_DIR/scope1090" /usr/share/
 # Install built frontend (nginx/lighttpd root = $INSTALL_DIR/html)
 mkdir -p "$INSTALL_DIR/html"
 cp -r "$SCRIPT_DIR/html/dist/." "$INSTALL_DIR/html/"
-# Install Python dependencies into an isolated virtualenv (PEP 668 / Bookworm compatible)
-VENV="$INSTALL_DIR/venv"
-python3 -m venv "$VENV"
-"$VENV/bin/pip" install --quiet -r "$SCRIPT_DIR/requirements.txt"
+# Install Python dependencies system-wide (dedicated Pi, --break-system-packages is safe)
+pip3 install --quiet --break-system-packages -r "$SCRIPT_DIR/requirements.txt"
 
 # Create data directory
 mkdir -p "$DATA_DIR"
