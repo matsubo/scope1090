@@ -26,18 +26,29 @@ def parse_metrics(stats):
     total = stats.get('total', {})
     airspy = stats.get('airspy', {})
 
-    if 'aircraft' in last:
-        result['aircraft'] = float(last['aircraft'])
+    # Aircraft count is at root level in readsb stats
+    if 'aircraft_with_pos' in stats:
+        result['aircraft'] = float(stats['aircraft_with_pos'])
+
+    # accepted is a list [adsb_count, mode_s_count, ...]
     if 'accepted' in local:
-        result['messages_rate'] = float(local['accepted']) / 60.0
-    if 'max_distance_m' in last:
-        result['max_range'] = float(last['max_distance_m']) / 1000.0
+        accepted = local['accepted']
+        total_accepted = sum(accepted) if isinstance(accepted, list) else accepted
+        result['messages_rate'] = float(total_accepted) / 60.0
+
+    # max_distance is in meters (no _m suffix in readsb JSON)
+    if 'max_distance' in last:
+        result['max_range'] = float(last['max_distance']) / 1000.0
+
     if 'signal' in local:
         result['signal_mean'] = float(local['signal'])
     if 'peak_signal' in local:
         result['signal_peak'] = float(local['peak_signal'])
-    if 'tracks_with_position' in total:
-        result['tracks_total'] = float(total['tracks_with_position'])
+
+    # tracks is a nested dict: {'all': N, 'single_message': M}
+    if 'tracks' in total and isinstance(total['tracks'], dict):
+        result['tracks_total'] = float(total['tracks'].get('all', 0))
+
     if 'rssi' in airspy:
         result['airspy_rssi'] = float(airspy['rssi'])
     if 'snr' in airspy:
