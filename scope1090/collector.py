@@ -47,7 +47,9 @@ def parse_metrics(stats):
 
 
 def main():
-    os.makedirs(os.path.dirname(LIVE_DB), exist_ok=True)
+    db_dir = os.path.dirname(LIVE_DB)
+    if db_dir:
+        os.makedirs(db_dir, exist_ok=True)
     init_db(LIVE_DB)
     conn = get_conn(LIVE_DB)
 
