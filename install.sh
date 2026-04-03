@@ -15,6 +15,10 @@ echo "==> Building frontend..."
 rm -rf "$SCRIPT_DIR/html/dist"
 cd "$SCRIPT_DIR/html" && npm install && npm run build
 
+# Stop services before replacing files (venv Python cannot be deleted while in use)
+echo "==> Stopping services..."
+systemctl stop scope1090-api.service scope1090-collector.service 2>/dev/null || true
+
 # Install Python package to /usr/share/scope1090/
 echo "==> Installing Python files..."
 rm -rf "$INSTALL_DIR"
