@@ -24,11 +24,11 @@ Replaces the RRD/PNG pipeline of graphs1090 with a SQLite time-series store and 
 
 ```bash
 git clone https://github.com/matsubo/scope1090
-sudo bash scope1090/scope1090/install.sh
+sudo bash scope1090/install.sh
 ```
 
-The install script (can be run from any directory):
-1. Builds the frontend (`npm install && npm run build` inside `scope1090/html/`)
+The install script:
+1. Builds the frontend (`npm install && npm run build` inside `html/`)
 2. Installs Python package to `/usr/share/scope1090/`
 3. Installs Flask via `pip3`
 4. Installs systemd units and configures nginx or lighttpd
@@ -104,7 +104,7 @@ conn.close()
 SCOPE1090_DB=/tmp/scope1090/live.db python3 -m scope1090.api &
 
 # Start Vite dev server (proxies /api to Flask)
-cd scope1090/html
+cd html
 npm install
 npm run dev
 # Open http://localhost:5173
@@ -113,10 +113,12 @@ npm run dev
 ## File Structure
 
 ```
-scope1090/
-├── collector.py          # polls readsb stats.json every 60s
-├── api.py                # Flask JSON API
-├── db.py                 # SQLite helpers
+scope1090/                # repo root
+├── scope1090/            # Python package
+│   ├── __init__.py
+│   ├── collector.py      # polls readsb stats.json every 60s
+│   ├── api.py            # Flask JSON API
+│   └── db.py             # SQLite helpers
 ├── html/
 │   ├── src/
 │   │   ├── main.js       # entry point, polling loop, zoom handler
@@ -129,11 +131,11 @@ scope1090/
 ├── systemd/              # service and timer units
 ├── nginx/                # nginx reverse proxy config
 ├── lighttpd/             # lighttpd reverse proxy config
+├── tests/
+│   ├── test_db.py
+│   ├── test_collector.py
+│   └── test_api.py
 └── install.sh            # Raspberry Pi install script
-tests/
-├── test_db.py
-├── test_collector.py
-└── test_api.py
 ```
 
 ## License
